@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ProjectFlow Icon Generator</title>
+  <style>
+    body { font-family: sans-serif; padding: 40px; text-align: center; background: #0f172a; color: white; }
+    canvas { margin: 10px; border: 1px solid #334155; border-radius: 12px; }
+    button { padding: 12px 24px; background: #8b5cf6; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; margin: 20px; }
+    button:hover { background: #7c3aed; }
+    h1 { margin-bottom: 20px; }
+    p { color: #94a3b8; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <h1>⚡ ProjectFlow Icon Generator</h1>
+  <p>اضغط الزر لتوليد وتحميل أيقونات الإضافة</p>
+  <div id="canvases"></div>
+  <button onclick="generateAndDownload()">توليد وتحميل جميع الأحجام</button>
+
+  <script>
+    const sizes = [16, 32, 48, 128];
+
+    function drawIcon(canvas, size) {
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      const scale = size / 128;
+
+      // Background gradient
+      const grad = ctx.createLinearGradient(0, 0, size, size);
+      grad.addColorStop(0, '#8b5cf6');
+      grad.addColorStop(1, '#6366f1');
+
+      // Rounded rect
+      const radius = 24 * scale;
+      ctx.beginPath();
+      ctx.moveTo(radius, 0);
+      ctx.lineTo(size - radius, 0);
+      ctx.quadraticCurveTo(size, 0, size, radius);
+      ctx.lineTo(size, size - radius);
+      ctx.quadraticCurveTo(size, size, size - radius, size);
+      ctx.lineTo(radius, size);
+      ctx.quadraticCurveTo(0, size, 0, size - radius);
+      ctx.lineTo(0, radius);
+      ctx.quadraticCurveTo(0, 0, radius, 0);
+      ctx.closePath();
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      // Lightning bolt
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(255,255,255,0.95)';
+      const cx = 64 * scale, cy = 60 * scale;
+      ctx.moveTo(cx, (28) * scale);
+      ctx.lineTo(cx + 8 * scale, (52) * scale);
+      ctx.lineTo(cx + 24 * scale, (52) * scale);
+      ctx.lineTo(cx + 12 * scale, (68) * scale);
+      ctx.lineTo(cx + 16 * scale, (92) * scale);
+      ctx.lineTo(cx, (78) * scale);
+      ctx.lineTo(cx - 16 * scale, (92) * scale);
+      ctx.lineTo(cx - 12 * scale, (68) * scale);
+      ctx.lineTo(cx - 24 * scale, (52) * scale);
+      ctx.lineTo(cx - 8 * scale, (52) * scale);
+      ctx.closePath();
+      ctx.fill();
+
+      // Checkmark
+      ctx.beginPath();
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = 5 * scale;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.moveTo(54 * scale, 66 * scale);
+      ctx.lineTo(62 * scale, 74 * scale);
+      ctx.lineTo(78 * scale, 54 * scale);
+      ctx.stroke();
+    }
+
+    function init() {
+      const container = document.getElementById('canvases');
+      sizes.forEach(size => {
+        const canvas = document.createElement('canvas');
+        canvas.id = `icon-${size}`;
+        drawIcon(canvas, size);
+        container.appendChild(canvas);
+        const label = document.createElement('p');
+        label.textContent = `${size}x${size}`;
+        label.style.fontSize = '12px';
+        label.style.color = '#94a3b8';
+        container.appendChild(label);
+      });
+    }
+
+    function generateAndDownload() {
+      sizes.forEach(size => {
+        const canvas = document.getElementById(`icon-${size}`);
+        canvas.toBlob(blob => {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `icon${size}.png`;
+          a.click();
+          URL.revokeObjectURL(url);
+        }, 'image/png');
+      });
+    }
+
+    init();
+  </script>
+</body>
+</html>
