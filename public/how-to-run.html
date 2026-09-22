@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>⚡ ProjectFlow - دليل التشغيل</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0a0a1a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      direction: rtl;
+      line-height: 1.8;
+    }
+    .hero {
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
+      padding: 60px 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 50%);
+      animation: pulse 4s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.1); opacity: 1; }
+    }
+    .hero h1 {
+      font-size: 42px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #c4b5fd, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .hero p {
+      color: #a5b4fc;
+      font-size: 18px;
+      position: relative;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    .method-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 32px;
+      background: #1e293b;
+      padding: 6px;
+      border-radius: 16px;
+      border: 1px solid #334155;
+    }
+    .method-tab {
+      flex: 1;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 12px;
+      background: transparent;
+      color: #94a3b8;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: inherit;
+    }
+    .method-tab.active {
+      background: linear-gradient(135deg, #7c3aed, #6366f1);
+      color: white;
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+    }
+    .method-tab:hover:not(.active) {
+      background: #334155;
+      color: #e2e8f0;
+    }
+    .method-content { display: none; }
+    .method-content.active { display: block; }
+    .step {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 16px;
+      position: relative;
+      transition: all 0.3s;
+    }
+    .step:hover {
+      border-color: #7c3aed;
+      transform: translateX(-4px);
+    }
+    .step-number {
+      position: absolute;
+      top: -12px;
+      right: 20px;
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, #7c3aed, #6366f1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: white;
+      box-shadow: 0 4px 8px rgba(124, 58, 237, 0.3);
+    }
+    .step h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #c4b5fd;
+      margin-top: 4px;
+    }
+    .step p {
+      color: #94a3b8;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+    .code-block {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin: 12px 0;
+      font-family: 'Fira Code', 'Courier New', monospace;
+      font-size: 13px;
+      color: #a5f3fc;
+      direction: ltr;
+      text-align: left;
+      overflow-x: auto;
+      position: relative;
+    }
+    .code-block .copy-btn {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      padding: 4px 10px;
+      background: #334155;
+      border: none;
+      border-radius: 6px;
+      color: #94a3b8;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .code-block .copy-btn:hover {
+      background: #7c3aed;
+      color: white;
+    }
+    .screenshot {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 12px 0;
+      text-align: center;
+    }
+    .screenshot .mock-browser {
+      background: #1e293b;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #475569;
+    }
+    .mock-browser-bar {
+      background: #334155;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .mock-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .mock-dot.red { background: #ef4444; }
+    .mock-dot.yellow { background: #f59e0b; }
+    .mock-dot.green { background: #10b981; }
+    .mock-url {
+      flex: 1;
+      background: #1e293b;
+      border-radius: 4px;
+      padding: 4px 10px;
+      font-size: 11px;
+      color: #94a3b8;
+      margin-right: 10px;
+      direction: ltr;
+      text-align: left;
+    }
+    .mock-content {
+      padding: 20px;
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .mock-content .extension-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #7c3aed, #6366f1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    .arrow {
+      display: inline-block;
+      color: #7c3aed;
+      font-size: 20px;
+      margin: 0 8px;
+      animation: bounce 1s ease-in-out infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(-5px); }
+    }
+    .tip {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(99, 102, 241, 0.1));
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin: 16px 0;
+    }
+    .tip-title {
+      color: #a78bfa;
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+    .tip p {
+      color: #c4b5fd;
+      font-size: 13px;
+    }
+    .warning {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin: 16px 0;
+    }
+    .warning-title {
+      color: #fbbf24;
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+    .warning p {
+      color: #fcd34d;
+      font-size: 13px;
+    }
+    .checklist {
+      list-style: none;
+      padding: 0;
+    }
+    .checklist li {
+      padding: 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: #94a3b8;
+    }
+    .checklist li .check {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      background: rgba(16, 185, 129, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #10b981;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .kbd {
+      display: inline-block;
+      padding: 2px 8px;
+      background: #334155;
+      border: 1px solid #475569;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 12px;
+      color: #e2e8f0;
+    }
+    .footer {
+      text-align: center;
+      padding: 40px 20px;
+      border-top: 1px solid #1e293b;
+      margin-top: 40px;
+    }
+    .footer p { color: #64748b; font-size: 13px; }
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-green {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+    }
+    .badge-purple {
+      background: rgba(124, 58, 237, 0.15);
+      color: #a78bfa;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .feature-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+    .feature-card .icon { font-size: 28px; margin-bottom: 8px; }
+    .feature-card h4 { font-size: 13px; font-weight: 600; color: #c4b5fd; margin-bottom: 4px; }
+    .feature-card p { font-size: 11px; color: #64748b; }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1>⚡ ProjectFlow</h1>
+    <p>دليل تشغيل إضافة Chrome</p>
+  </div>
+
+  <div class="container">
+
+    <!-- Features -->
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="icon">📋</div>
+        <h4>إدارة المهام</h4>
+        <p>أضف ونظم مهامك بسهولة</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">⚡</div>
+        <h4>إضافة سريعة</h4>
+        <p>زر عائم في كل المواقع</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🔔</div>
+        <h4>تذكيرات</h4>
+        <p>إشعارات قبل الموعد</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🔒</div>
+        <h4>خصوصية</h4>
+        <p>كل البيانات محلياً</p>
+      </div>
+    </div>
+
+    <!-- Method Tabs -->
+    <div class="section-title" style="margin-top: 40px;">🚀 خطوات التشغيل</div>
+
+    <div class="method-tabs">
+      <button class="method-tab active" onclick="switchTab('dev')">🛠️ للتطوير (محلي)</button>
+      <button class="method-tab" onclick="switchTab('publish')">📤 للنشر (Chrome Store)</button>
+    </div>
+
+    <!-- Method 1: Development -->
+    <div id="method-dev" class="method-content active">
+
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>ابني المشروع</h3>
+        <p>افتح Terminal في مجلد المشروع وشغّل:</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+          npm run build
+        </div>
+        <p>ده هيعمل مجلد <code>dist/</code> فيه كل ملفات الإضافة الجاهزة.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>ولّد الأيقونات</h3>
+        <p>افتح الملف ده في المتصفح:</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+          dist/generate-icons.html
+        </div>
+        <p>اضغط "توليد وتحميل جميع الأحجام" → هيتحمّل 4 ملفات PNG (16, 32, 48, 128)</p>
+        <p>انقلهم لمجلد <code>dist/icons/</code> وسمّيهم:</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+          dist/icons/icon16.png
+          dist/icons/icon32.png
+          dist/icons/icon48.png
+          dist/icons/icon128.png
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>أضف الأيقونات في manifest.json</h3>
+        <p>افتح <code>dist/manifest.json</code> وضيف الأيقونات:</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+{
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "ProjectFlow",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  }
+}
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">4</div>
+        <h3>حمّل الإضافة في Chrome</h3>
+        <div class="screenshot">
+          <div class="mock-browser">
+            <div class="mock-browser-bar">
+              <div class="mock-dot red"></div>
+              <div class="mock-dot yellow"></div>
+              <div class="mock-dot green"></div>
+              <div class="mock-url">chrome://extensions/</div>
+            </div>
+            <div class="mock-content">
+              <p style="font-size: 12px; color: #94a3b8;">1. فعّل "Developer mode" ↗️</p>
+              <p style="font-size: 12px; color: #94a3b8;">2. اضغط "Load unpacked" 📂</p>
+              <p style="font-size: 12px; color: #94a3b8;">3. اختار مجلد dist/ ✅</p>
+            </div>
+          </div>
+        </div>
+        <ul class="checklist">
+          <li><span class="check">✓</span> افتح Chrome واكتب في العنوان: <code>chrome://extensions/</code></li>
+          <li><span class="check">✓</span> فعّل <strong>"Developer mode"</strong> (في أعلى اليمين)</li>
+          <li><span class="check">✓</span> اضغط <strong>"Load unpacked"</strong></li>
+          <li><span class="check">✓</span> اختار مجلد <code>dist/</code> من المشروع</li>
+          <li><span class="check">✓</span> هتلاقي الإضافة ظهرت! ⚡</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <div class="step-number">5</div>
+        <h3>جرّب الإضافة! 🎉</h3>
+        <ul class="checklist">
+          <li><span class="check">⚡</span> اضغط على أيقونة الإضافة في Toolbar → هيفتح الـ Popup</li>
+          <li><span class="check">📋</span> أضف مهمة جديدة من الـ Popup</li>
+          <li><span class="check">🌐</span> افتح أي موقع → هتلاقي زر عائم بنفسجي في أسفل الصفحة</li>
+          <li><span class="check">⌨️</span> اختصارات: <span class="kbd">Alt</span>+<span class="kbd">Shift</span>+<span class="kbd">P</span> لفتح الإضافة</li>
+          <li><span class="check">⚙️</span> اضغط "تفاصيل" → "Extension options" لفتح الإعدادات</li>
+        </ul>
+      </div>
+
+      <div class="tip">
+        <div class="tip-title">💡 نصيحة للتطوير</div>
+        <p>لما تعدّل في الكود، اعمل <code>npm run build</code> تاني وبعدها روح على <code>chrome://extensions/</code> واضغط زر التحديث ↻ عند الإضافة.</p>
+      </div>
+
+    </div>
+
+    <!-- Method 2: Publish -->
+    <div id="method-publish" class="method-content">
+
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>جهّز حساب المطور</h3>
+        <p>ادخل على Chrome Developer Dashboard:</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+          https://chrome.google.com/webstore/devconsole
+        </div>
+        <p>سجّل دخول بحساب Google وادفع رسوم التسجيل لمرة واحدة (<strong>$5</strong>).</p>
+      </div>
+
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>اعمل ZIP من الإضافة</h3>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+          cd dist
+          zip -r ../projectflow-extension.zip .
+        </div>
+        <p>أو على Windows:</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
+          cd dist
+          Compress-Archive -Path . -DestinationPath ../projectflow-extension.zip
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>ارفع الإضافة</h3>
+        <ul class="checklist">
+          <li><span class="check">1</span> في Developer Dashboard → اضغط "New Item"</li>
+          <li><span class="check">2</span> ارفع ملف <code>projectflow-extension.zip</code></li>
+          <li><span class="check">3</span> املأ البيانات: الاسم، الوصف، الفئة</li>
+          <li><span class="check">4</span> ارفع Screenshots (1280x800 أو 640x400)</li>
+          <li><span class="check">5</span> ارفع أيقونة كبيرة (128x128)</li>
+          <li><span class="check">6</span> املأ سياسة الخصوصية (موجودة في privacy.html)</li>
+          <li><span class="check">7</span> اضغط "Submit for Review"</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <div class="step-number">4</div>
+        <h3>استنى المراجعة ⏳</h3>
+        <p>المراجعة بتاخد من ساعات لـ 3 أيام في الغالب.</p>
+        <p>هيوصلك إيميل لما الإضافة تتقبل وتنزل في Chrome Web Store.</p>
+      </div>
+
+      <div class="warning">
+        <div class="warning-title">⚠️ مهم جداً</div>
+        <p>تأكد إن:</p>
+        <ul style="padding-right: 20px; margin-top: 8px;">
+          <li>الأيقونات PNG موجودة (مش SVG)</li>
+          <li>manifest.json فيه كل الحقول المطلوبة</li>
+          <li>سياسة الخصوصية واضحة وموجودة</li>
+          <li>الوصف دقيق ومش مضلل</li>
+          <li>الـ permissions مبررة وضرورية</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Shortcuts Section -->
+    <div class="section-title" style="margin-top: 40px;">⌨️ اختصارات لوحة المفاتيح</div>
+    <div class="step">
+      <ul class="checklist">
+        <li><span class="check">⚡</span> <span class="kbd">Alt</span> + <span class="kbd">Shift</span> + <span class="kbd">P</span> → فتح الإضافة (Popup)</li>
+        <li><span class="check">➕</span> <span class="kbd">Alt</span> + <span class="kbd">Shift</span> + <span class="kbd">A</span> → إضافة مهمة سريعة</li>
+      </ul>
+      <div class="tip" style="margin-top: 12px;">
+        <div class="tip-title">💡 على Mac</div>
+        <p>استخدم <span class="kbd">⌘ Command</span> بدل <span class="kbd">Alt</span></p>
+      </div>
+    </div>
+
+    <!-- Troubleshooting -->
+    <div class="section-title" style="margin-top: 40px;">🔧 حل المشاكل</div>
+
+    <div class="step">
+      <h3>الإضافة مش شغالة؟</h3>
+      <ul class="checklist">
+        <li><span class="check">1</span> تأكد إن Developer mode مفعّل في chrome://extensions/</li>
+        <li><span class="check">2</span> اضغط زر التحديث ↻ عند الإضافة</li>
+        <li><span class="check">3</span> شوف Console errors: اضغط "Service Worker" في صفحة الإضافة</li>
+        <li><span class="check">4</span> تأكد إن manifest.json سليم (مفيش أخطاء syntax)</li>
+        <li><span class="check">5</span> جرّب تحذف الإضافة وتحمّلها تاني</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <h3>الزر العائم مش ظاهر؟</h3>
+      <ul class="checklist">
+        <li><span class="check">1</span> الزر مش بيظهر في صفحات chrome:// أو chrome-extension://</li>
+        <li><span class="check">2</span> جرّب تفتح موقع عادي زي google.com</li>
+        <li><span class="check">3</span> حدّث الصفحة (F5)</li>
+      </ul>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>⚡ ProjectFlow v1.0.0 | Manifest V3 | Chrome Web Store Ready</p>
+      <p style="margin-top: 8px;">
+        <span class="badge badge-green">✅ Manifest V3</span>
+        <span class="badge badge-purple">✅ Chrome Web Store Compatible</span>
+      </p>
+    </div>
+
+  </div>
+
+  <script>
+    function switchTab(tab) {
+      // Update tabs
+      document.querySelectorAll('.method-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.method-content').forEach(c => c.classList.remove('active'));
+
+      if (tab === 'dev') {
+        document.querySelectorAll('.method-tab')[0].classList.add('active');
+        document.getElementById('method-dev').classList.add('active');
+      } else {
+        document.querySelectorAll('.method-tab')[1].classList.add('active');
+        document.getElementById('method-publish').classList.add('active');
+      }
+    }
+
+    function copyCode(btn) {
+      const code = btn.parentElement.textContent.replace('نسخ', '').trim();
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = 'تم ✓';
+        btn.style.background = '#10b981';
+        btn.style.color = 'white';
+        setTimeout(() => {
+          btn.textContent = 'نسخ';
+          btn.style.background = '#334155';
+          btn.style.color = '#94a3b8';
+        }, 2000);
+      });
+    }
+  </script>
+
+</body>
+</html>
